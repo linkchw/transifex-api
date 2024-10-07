@@ -1,0 +1,9 @@
+venv/
+.venv/
+__pycache__/
+po_files/
+*.po
+.pot
+*.json
+*.jsonl
+config.py
