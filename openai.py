@@ -1,12 +1,16 @@
 from openai import OpenAI, DefaultHttpxClient
 import httpx
-from config import OPENAI_API_KEY
+from config import (
+    OPENAI_API_KEY,
+    PROXY,
+    LOCAL_HOST
+)
 
 client = OpenAI(
     api_key=OPENAI_API_KEY,
     http_client=DefaultHttpxClient(
-        proxies="http://192.168.88.111:10809",
-        transport=httpx.HTTPTransport(local_address="192.168.88.111"),
+        proxies=PROXY,
+        transport=httpx.HTTPTransport(local_address=LOCAL_HOST),
         timeout=20.0,
     ),
 )
