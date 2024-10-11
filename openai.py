@@ -1,16 +1,16 @@
+from dotenv import load_dotenv, dotenv_values
 from openai import OpenAI, DefaultHttpxClient
 import httpx
-from config import (
-    OPENAI_API_KEY,
-    PROXY,
-    LOCAL_HOST
-)
+import os
+
+
+load_dotenv()
 
 client = OpenAI(
-    api_key=OPENAI_API_KEY,
+    api_key=os.getenv("OPENAI_API_KEY"),
     http_client=DefaultHttpxClient(
-        proxies=PROXY,
-        transport=httpx.HTTPTransport(local_address=LOCAL_HOST),
+        proxies=os.getenv("PROXY"),
+        transport=httpx.HTTPTransport(local_address=os.getenv("LOCAL_HOST")),
         timeout=20.0,
     ),
 )
