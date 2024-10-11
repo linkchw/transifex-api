@@ -7,16 +7,16 @@ import json
 from dotenv import load_dotenv, dotenv_values
 
 
-load_dotenv()
+config = dotenv_values(".env")
 
-transifex_api.setup(auth=os.getenv("TRANSIFEX_API_TOKEN"))
+transifex_api.setup(auth=config['TRANSIFEX_API_TOKEN'])
 
 pattern = re.compile(r':r:([a-zA-Z0-9_]+)>')
 
 
 def get_organization():
     for o in transifex_api.Organization.all():
-        if o.name == os.getenv("TRANSIFEX_ORGANIZATION_SLUG"):
+        if o.name == config["TRANSIFEX_ORGANIZATION_SLUG"]:
             return o
     return None
 
@@ -96,9 +96,9 @@ def spilt_translations(translated_content, resource_name):
 def get_url():
     organization = get_organization()
     project = organization.fetch("projects").get(
-        slug=os.getenv("TRANSIFEX_PROJECT_SLUG"))
+        slug=config["TRANSIFEX_PROJECT_SLUG"])
     language = transifex_api.Language.get(
-        code=os.getenv("TARGET_LANGUAGE_CODE"))
+        code=config["TARGET_LANGUAGE_CODE"])
     resources = project.fetch('resources')
 
     for resource in resources:
