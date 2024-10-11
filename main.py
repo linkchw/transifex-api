@@ -4,21 +4,19 @@ import re
 import os
 import polib
 import json
-from config import (
-    TRANSIFEX_API_TOKEN,
-    TRANSIFEX_PROJECT_SLUG,
-    TRANSIFEX_ORGANIZATION_SLUG,
-    TARGET_LANGUAGE_CODE
-)
+from dotenv import load_dotenv, dotenv_values
 
-transifex_api.setup(auth=TRANSIFEX_API_TOKEN)
+
+load_dotenv()
+
+transifex_api.setup(auth=os.getenv("TRANSIFEX_API_TOKEN"))
 
 pattern = re.compile(r':r:([a-zA-Z0-9_]+)>')
 
 
 def get_organization():
     for o in transifex_api.Organization.all():
-        if o.name == TRANSIFEX_ORGANIZATION_SLUG:
+        if o.name == os.getenv("TRANSIFEX_ORGANIZATION_SLUG"):
             return o
     return None
 
@@ -51,7 +49,8 @@ def convert_to_json(resource_name, global_json_file="all_translations.jsonl"):
                 message = {
                     "messages": [
                         {"role": "system", "content": "You are a translator."},
-                        {"role": "user", "content": f"Translate the following text to Persian: '{entry.msgid}'"},
+                        {"role": "user", "content": f"Translate the following text to Persian: '{
+                            entry.msgid}'"},
                         {"role": "assistant", "content": entry.msgstr}
                     ]
                 }
@@ -96,8 +95,10 @@ def spilt_translations(translated_content, resource_name):
 
 def get_url():
     organization = get_organization()
-    project = organization.fetch("projects").get(slug=TRANSIFEX_PROJECT_SLUG)
-    language = transifex_api.Language.get(code=TARGET_LANGUAGE_CODE)
+    project = organization.fetch("projects").get(
+        slug=os.getenv("TRANSIFEX_PROJECT_SLUG"))
+    language = transifex_api.Language.get(
+        code=os.getenv("TARGET_LANGUAGE_CODE"))
     resources = project.fetch('resources')
 
     for resource in resources:
