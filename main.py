@@ -7,7 +7,9 @@ import json
 from dotenv import load_dotenv, dotenv_values
 
 
-config = dotenv_values(".env")
+config = {
+    **dotenv_values(".env")
+}
 
 transifex_api.setup(auth=config['TRANSIFEX_API_TOKEN'])
 
